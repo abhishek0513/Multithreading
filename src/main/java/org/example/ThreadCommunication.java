@@ -3,15 +3,15 @@ package org.example;
 import javax.sound.sampled.Port;
 import java.awt.*;
 
-class sharedResource{
+class sharedResource {
     private int data;
     private Boolean hasData = false;
-    public synchronized void produce(int value){
-        while (hasData){
-            try{
+
+    public synchronized void produce(int value) {
+        while (hasData) {
+            try {
                 wait();
-            }
-            catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
@@ -20,11 +20,12 @@ class sharedResource{
         System.out.println("Produced : " + value);
         notify();
     }
-    public synchronized int consume(){
-        while(!hasData){
-            try{
+
+    public synchronized int consume() {
+        while (!hasData) {
+            try {
                 wait();
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
@@ -36,28 +37,31 @@ class sharedResource{
 }
 
 
-class Producer implements Runnable{
+class Producer implements Runnable {
     private final sharedResource resource;
-    public Producer(sharedResource Resource){
+
+    public Producer(sharedResource Resource) {
         this.resource = Resource;
     }
 
     @Override
-    public void run(){
-        for(int i = 0; i< 10; i++){
+    public void run() {
+        for (int i = 0; i < 10; i++) {
             resource.produce(i);
         }
     }
 }
-class Consumer implements Runnable{
+
+class Consumer implements Runnable {
     private final sharedResource resource;
-    public Consumer(sharedResource Resource){
+
+    public Consumer(sharedResource Resource) {
         this.resource = Resource;
     }
 
     @Override
-    public void run(){
-        for(int i = 0; i< 10; i++){
+    public void run() {
+        for (int i = 0; i < 10; i++) {
             int value = resource.consume();
         }
     }
